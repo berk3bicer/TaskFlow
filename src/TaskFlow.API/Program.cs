@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using TaskFlow.Infrastructure.Persistence;
+using TaskFlow.Application;
+using TaskFlow.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,9 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // SERVICES
 // ──────────────────────────────────────────────────────
 
-builder.Services.AddDbContext<TaskFlowDbContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
 
