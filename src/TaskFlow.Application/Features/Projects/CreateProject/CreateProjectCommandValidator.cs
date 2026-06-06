@@ -12,8 +12,5 @@ public class CreateProjectCommandValidator : AbstractValidator<CreateProjectComm
 
         RuleFor(x => x.Description)
             .MaximumLength(2000);
-
-        RuleFor(x => x.OwnerId)
-            .NotEqual(Guid.Empty).WithMessage("Geçerli bir sahip belirtilmelidir.");
     }
 }
