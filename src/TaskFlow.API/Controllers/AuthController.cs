@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TaskFlow.Application.Features.Auth.Login;
 using TaskFlow.Application.Features.Auth.Register;
 
 namespace TaskFlow.API.Controllers;
@@ -24,4 +25,10 @@ public class AuthController : ControllerBase
         return Ok(userId);
     }
 
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginCommand command)
+    {
+        var token = await _mediator.Send(command);
+        return Ok(token);
+    }
 }
