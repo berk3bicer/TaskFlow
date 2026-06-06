@@ -1,6 +1,7 @@
 using System.Reflection;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using TaskFlow.Application.Common.Behaviors;
 
 namespace TaskFlow.Application;
 
@@ -11,7 +12,10 @@ public static class DependencyInjection
         var assembly = Assembly.GetExecutingAssembly();
 
         services.AddMediatR(cfg =>
-            cfg.RegisterServicesFromAssembly(assembly));
+        {
+            cfg.RegisterServicesFromAssembly(assembly);
+            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+        });
 
         services.AddValidatorsFromAssembly(assembly);
 
