@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskFlow.Application.Features.Projects.CreateProject;
+using TaskFlow.Application.Features.Projects.GetProjects;
 
 namespace TaskFlow.API.Controllers;
 
@@ -27,5 +28,16 @@ public class ProjectsController : ControllerBase
 
         var projectId = await _mediator.Send(commandWithOwner);
         return Ok(projectId);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        var query = new GetProjectQuery(userId);
+
+        var projects = await _mediator.Send(query);
+        return Ok(projects);
     }
 }
