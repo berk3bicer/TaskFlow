@@ -40,4 +40,5 @@ public class ProjectsController : ControllerBase
         var projects = await _mediator.Send(query);
         return Ok(projects);
     }
+
 }

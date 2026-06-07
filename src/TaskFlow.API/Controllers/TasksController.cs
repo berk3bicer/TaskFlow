@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskFlow.Application.Features.Tasks.CreateTask;
+using TaskFlow.Application.Features.Tasks.GetTask;
+using TaskFlow.Application.Features.Tasks.UpdateTaskStatus;
 
 namespace TaskFlow.API.Controllers;
 
@@ -27,5 +29,31 @@ public class TasksController : ControllerBase
 
         var taskId = await _mediator.Send(commandWithRequester);
         return Ok(taskId);
+    }
+
+
+    [HttpGet("{projectId}")]
+    public async Task<IActionResult> GetByProject(Guid projectId)
+    {
+        var query = new GetTaskQuery(projectId);
+        var tasks = await _mediator.Send(query);
+        return Ok(tasks);
+    }
+
+    [HttpPut("{taskId}")]
+    public async Task<IActionResult> UpdateStatus(
+    Guid taskId,
+    UpdateTaskStatusCommand command)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        var commandToSend = command with
+        {
+            TaskId = taskId,
+            RequesterId = userId
+        };
+
+        await _mediator.Send(commandToSend);
+        return NoContent();
     }
 }
