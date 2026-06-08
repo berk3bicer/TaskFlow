@@ -25,7 +25,7 @@ public class GetTaskQueryHandler
             .FirstOrDefaultAsync(p => p.Id == request.ProjectId, cancellationToken);
 
         if (project is null)
-            throw new DomainException("Proje bulunamadı");
+            throw new NotFoundException("Proje bulunamadı");
 
         var isOwner = project.OwnerId == request.RequesterId;
 
@@ -38,7 +38,7 @@ public class GetTaskQueryHandler
 
         // 3. Ne owner ne de atanmış biriyse -> yetkisiz
         if (!isOwner && !hasAssignedTask)
-            throw new DomainException("Bu projenin görevlerini görme yetkiniz yok");
+            throw new ForbiddenException("Bu projenin görevlerini görme yetkiniz yok");
 
         // 4. Task sorgusu — owner hepsini, assignee sadece kendininkini görür
         var query = _context.Tasks

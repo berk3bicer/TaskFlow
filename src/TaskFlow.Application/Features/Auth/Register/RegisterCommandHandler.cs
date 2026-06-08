@@ -29,7 +29,7 @@ public class RegisterCommandHandler
 
         if (emailExists)
         {
-            throw new DomainException("Bu email zaten kayıtlı");
+            throw new ConflictException("Bu email zaten kayıtlı");
         }
 
         var passwordHash = _passwordHasher.Hash(request.Password);

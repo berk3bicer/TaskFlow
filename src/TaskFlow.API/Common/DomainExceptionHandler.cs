@@ -16,14 +16,22 @@ public class DomainExceptionHandler : IExceptionHandler
             return false;
         }
 
+        var (statusCode, title) = domainException switch
+        {
+            NotFoundException  => (StatusCodes.Status404NotFound,    "Bulunamadı"),
+            ForbiddenException => (StatusCodes.Status403Forbidden,   "Yetkisiz işlem"),
+            ConflictException  => (StatusCodes.Status409Conflict,    "Çakışma"),
+            _                  => (StatusCodes.Status400BadRequest,  "Geçersiz istek")
+        };
+
         var problemDetails = new ProblemDetails
         {
-            Status = StatusCodes.Status409Conflict,
-            Title = "İşlem gerçekleştirilemedi",
+            Status = statusCode,
+            Title  = title,
             Detail = domainException.Message
         };
 
-        httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+        httpContext.Response.StatusCode = statusCode;
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
         return true;

@@ -24,19 +24,19 @@ public class AddCommentCommandHandler
             .FirstOrDefaultAsync(t => t.Id == request.TaskItemId, cancellationToken);
 
         if (task is null)
-            throw new DomainException("Task bulunamadı");
+            throw new NotFoundException("Task bulunamadı");
 
         var project = await _context.Projects
             .FirstOrDefaultAsync(p => p.Id == task.ProjectId, cancellationToken);
 
         if (project is null)
-            throw new DomainException("Proje bulunamadı");
+            throw new NotFoundException("Proje bulunamadı");
 
         var isOwner = project.OwnerId == request.RequesterId;
         var isAssignee = task.AssignedToId == request.RequesterId;
 
         if (!isOwner && !isAssignee)
-            throw new DomainException("Bu task'a yorum yapma yetkiniz yok");
+            throw new ForbiddenException("Bu task'a yorum yapma yetkiniz yok");
 
         var comment = new Comment(request.Content, request.TaskItemId, request.RequesterId);
         _context.Comments.Add(comment);

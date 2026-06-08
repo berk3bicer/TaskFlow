@@ -22,16 +22,16 @@ public class AssignTaskCommandHandler : IRequestHandler<AssignTaskCommand>
             .FirstOrDefaultAsync(t => t.Id == request.TaskId, cancellationToken);
 
         if (task is null)
-            throw new DomainException("Task bulunamadı");
+            throw new NotFoundException("Task bulunamadı");
 
         var project = await _context.Projects
             .FirstOrDefaultAsync(p => p.Id == task.ProjectId, cancellationToken);
 
         if (project is null)
-            throw new DomainException("Proje bulunamadı");
+            throw new NotFoundException("Proje bulunamadı");
 
         if (project.OwnerId != request.RequesterId)
-            throw new DomainException("Bu task'ı atama yetkiniz yok");
+            throw new ForbiddenException("Bu task'ı atama yetkiniz yok");
 
         if (request.AssignedToId is not null)
         {
@@ -39,7 +39,7 @@ public class AssignTaskCommandHandler : IRequestHandler<AssignTaskCommand>
                 .AnyAsync(u => u.Id == request.AssignedToId, cancellationToken);
 
             if (!userExists)
-                throw new DomainException("Atanacak kullanıcı bulunamadı");
+                throw new NotFoundException("Atanacak kullanıcı bulunamadı");
 
             task.AssignTo(request.AssignedToId.Value);
         }

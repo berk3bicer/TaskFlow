@@ -24,10 +24,10 @@ public class UpdateTaskStatusCommandHandler
             .FirstOrDefaultAsync(t => t.Id == request.TaskId, cancellationToken);
 
         if (task is null)
-            throw new DomainException("Görev bulunamadı");
+            throw new NotFoundException("Görev bulunamadı");
 
         if (task.Project!.OwnerId != request.RequesterId)
-            throw new DomainException("Bu görevi güncelleme yetkiniz yok");
+            throw new ForbiddenException("Bu görevi güncelleme yetkiniz yok");
 
         task.UpdateStatus(request.NewStatus);
 

@@ -24,20 +24,20 @@ public class GetCommentsQueryHandler
             .FirstOrDefaultAsync(t => t.Id == request.TaskItemId, cancellationToken);
 
         if (task is null)
-            throw new DomainException("Task bulunamadı");
+            throw new NotFoundException("Task bulunamadı");
 
         var project = await _context.Projects
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == task.ProjectId, cancellationToken);
 
         if (project is null)
-            throw new DomainException("Proje bulunamadı");
+            throw new NotFoundException("Proje bulunamadı");
 
         var isOwner = project.OwnerId == request.RequesterId;
         var isAssignee = task.AssignedToId == request.RequesterId;
 
         if (!isOwner && !isAssignee)
-            throw new DomainException("Bu task'ın yorumlarını görme yetkiniz yok");
+            throw new ForbiddenException("Bu task'ın yorumlarını görme yetkiniz yok");
 
         return await _context.Comments
             .AsNoTracking()

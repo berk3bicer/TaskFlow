@@ -24,10 +24,10 @@ public class CreateTaskCommandHandler
             .FirstOrDefaultAsync(p => p.Id == request.ProjectId, cancellationToken);
 
         if (project is null)
-            throw new DomainException("Proje bulunamadı");
+            throw new NotFoundException("Proje bulunamadı");
 
         if (project.OwnerId != request.RequesterId)
-            throw new DomainException("Bu projeye task ekleme yetkiniz yok");
+            throw new ForbiddenException("Bu projeye task ekleme yetkiniz yok");
 
         var task = new TaskItem(
             request.Title,
