@@ -18,14 +18,12 @@ public class AssignTaskCommandHandler : IRequestHandler<AssignTaskCommand>
         AssignTaskCommand request,
         CancellationToken cancellationToken)
     {
-        // 1. Atanacak task'ı çek (AsNoTracking YOK — değiştireceğiz)
         var task = await _context.Tasks
             .FirstOrDefaultAsync(t => t.Id == request.TaskId, cancellationToken);
 
         if (task is null)
             throw new DomainException("Task bulunamadı");
 
-        // 2. Yetki zinciri: task -> task.ProjectId -> project.OwnerId
         var project = await _context.Projects
             .FirstOrDefaultAsync(p => p.Id == task.ProjectId, cancellationToken);
 
@@ -35,7 +33,6 @@ public class AssignTaskCommandHandler : IRequestHandler<AssignTaskCommand>
         if (project.OwnerId != request.RequesterId)
             throw new DomainException("Bu task'ı atama yetkiniz yok");
 
-        // 3. Atama mı, kaldırma mı?
         if (request.AssignedToId is not null)
         {
             var userExists = await _context.Users
@@ -51,7 +48,6 @@ public class AssignTaskCommandHandler : IRequestHandler<AssignTaskCommand>
             task.Unassign();
         }
 
-        // 4. Kaydet
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
