@@ -36,7 +36,8 @@ public class TasksController : ControllerBase
     [HttpGet("{projectId}")]
     public async Task<IActionResult> GetByProject(Guid projectId)
     {
-        var query = new GetTaskQuery(projectId);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var query = new GetTaskQuery(projectId, userId);
         var tasks = await _mediator.Send(query);
         return Ok(tasks);
     }

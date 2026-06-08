@@ -9,7 +9,6 @@ public class Project : BaseEntity
     public string? Description { get; private set; }
     public Guid OwnerId { get; private set; }
 
-    // Navigation properties
     public User? Owner { get; private set; }
 
     private readonly List<TaskItem> _tasks = new();

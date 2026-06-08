@@ -39,7 +39,8 @@ public class CommentsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetComments(Guid taskId)
     {
-        var query = new GetCommentsQuery(taskId);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var query = new GetCommentsQuery(taskId, userId);
         var comments = await _mediator.Send(query);
         return Ok(comments);
     }
