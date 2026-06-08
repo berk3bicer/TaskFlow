@@ -5,6 +5,7 @@ using System.Security.Claims;
 using TaskFlow.Application.Features.Tasks.CreateTask;
 using TaskFlow.Application.Features.Tasks.GetTask;
 using TaskFlow.Application.Features.Tasks.UpdateTaskStatus;
+using TaskFlow.Application.Features.Tasks.AssignTask;
 
 namespace TaskFlow.API.Controllers;
 
@@ -52,6 +53,19 @@ public class TasksController : ControllerBase
             TaskId = taskId,
             RequesterId = userId
         };
+
+        await _mediator.Send(commandToSend);
+        return NoContent();
+    }
+
+    [HttpPut("{taskId}/assign")]
+
+    public async Task<IActionResult> Assign
+    (Guid taskId,
+     AssignTaskCommand command)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var commandToSend = command with { TaskId = taskId, RequesterId = userId };
 
         await _mediator.Send(commandToSend);
         return NoContent();
