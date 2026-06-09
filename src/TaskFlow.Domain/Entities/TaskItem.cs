@@ -49,6 +49,24 @@ public class TaskItem : BaseEntity
         SetUpdatedAt();
     }
 
+    public void UpdateDetails(string title, string? description, DateTime? dueDate)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            throw new DomainException("Task başlığı boş olamaz");
+
+        if (title.Length > 200)
+            throw new DomainException("Task başlığı 200 karakteri geçemez");
+
+        if (dueDate.HasValue && dueDate.Value < DateTime.UtcNow.Date)
+            throw new DomainException("Bitiş tarihi geçmişte olamaz");
+
+        Title = title;
+        Description = description;
+        DueDate = dueDate;
+
+        SetUpdatedAt();
+    }
+
     public void AssignTo(Guid userId)
     {
         if (userId == Guid.Empty)
