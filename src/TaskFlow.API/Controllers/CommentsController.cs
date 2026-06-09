@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskFlow.Application.Features.Comments.AddComment;
+using TaskFlow.Application.Features.Comments.EditComment;
 using TaskFlow.Application.Features.Comments.GetComments;
 
 namespace TaskFlow.API.Controllers;
@@ -43,5 +44,23 @@ public class CommentsController : ControllerBase
         var query = new GetCommentsQuery(taskId, userId);
         var comments = await _mediator.Send(query);
         return Ok(comments);
+    }
+
+    [HttpPut("{commentId}")]
+    public async Task<IActionResult> EditComment(
+    Guid taskId,
+    Guid commentId,
+    EditCommentCommand command)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        var commandToSend = command with
+        {
+            CommentId = commentId,
+            RequesterId = userId
+        };
+
+        await _mediator.Send(commandToSend);
+        return NoContent();
     }
 }
