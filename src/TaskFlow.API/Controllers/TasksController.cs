@@ -7,6 +7,7 @@ using TaskFlow.Application.Features.Tasks.GetTask;
 using TaskFlow.Application.Features.Tasks.UpdateTaskStatus;
 using TaskFlow.Application.Features.Tasks.AssignTask;
 using TaskFlow.Application.Features.Tasks.UpdateTask;
+using TaskFlow.Application.Features.Tasks.DeleteTask;
 
 namespace TaskFlow.API.Controllers;
 
@@ -83,6 +84,17 @@ public class TasksController : ControllerBase
         var commandToSend = command with { TaskId = taskId, RequesterId = userId };
 
         await _mediator.Send(commandToSend);
+        return NoContent();
+    }
+
+    [HttpDelete("{taskId}")]
+    public async Task<IActionResult> Delete
+    (Guid taskId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var command = new DeleteTaskCommand(taskId, userId);
+
+        await _mediator.Send(command);
         return NoContent();
     }
 }
