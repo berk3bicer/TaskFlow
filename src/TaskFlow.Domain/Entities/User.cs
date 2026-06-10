@@ -8,8 +8,6 @@ public class User : BaseEntity
     public string Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public string FullName { get; private set; } = null!;
-    public string Role { get; private set; } = "User";
-
     private User() { }
 
     public User(string email, string passwordHash, string fullName)
@@ -40,12 +38,4 @@ public class User : BaseEntity
         SetUpdatedAt();
     }
 
-    public void ChangeRole(string newRole)
-    {
-        if (newRole != "User" && newRole != "Admin")
-            throw new DomainException("Geçersiz rol");
-
-        Role = newRole;
-        SetUpdatedAt();
-    }
 }
