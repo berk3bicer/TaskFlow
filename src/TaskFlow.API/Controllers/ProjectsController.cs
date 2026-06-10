@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskFlow.Application.Features.Projects.CreateProject;
+using TaskFlow.Application.Features.Projects.DeleteProject;
 using TaskFlow.Application.Features.Projects.GetProjects;
 
 namespace TaskFlow.API.Controllers;
@@ -41,4 +42,14 @@ public class ProjectsController : ControllerBase
         return Ok(projects);
     }
 
+    [HttpDelete("{projectId}")]
+    public async Task<IActionResult> Delete
+    (Guid projectId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var command = new DeleteProjectCommand(projectId, userId);
+
+        await _mediator.Send(command);
+        return NoContent();
+    }
 }
