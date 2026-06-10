@@ -92,7 +92,7 @@ Auth dışındaki tüm endpoint'ler JWT gerektirir (`Authorization: Bearer <toke
 |-------|------|----------|-------|
 | POST | `/api/tasks` | Task oluştur | Proje sahibi |
 | GET | `/api/tasks/{projectId}` | Projenin task'larını listele | Sahip tümünü, atanan kendininkini |
-| PUT | `/api/tasks/{taskId}` | Task durumunu güncelle | Sahip veya atanan |
+| PUT | `/api/tasks/{taskId}` | Task durumunu güncelle | Proje sahibi |
 | PUT | `/api/tasks/{taskId}/assign` | Task'ı bir kullanıcıya ata | Proje sahibi |
 | PUT | `/api/tasks/{taskId}/details` | Task başlık/açıklama/tarih güncelle | Proje sahibi |
 | DELETE | `/api/tasks/{taskId}` | Task'ı sil | Proje sahibi |
