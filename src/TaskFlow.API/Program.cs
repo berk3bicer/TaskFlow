@@ -8,10 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ──────────────────────────────────────────────────────
-// SERVICES
-// ──────────────────────────────────────────────────────
-
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -51,10 +47,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
-
-// ──────────────────────────────────────────────────────
-// MIDDLEWARE PIPELINE
-// ──────────────────────────────────────────────────────
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

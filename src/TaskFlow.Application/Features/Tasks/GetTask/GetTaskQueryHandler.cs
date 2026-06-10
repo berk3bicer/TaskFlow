@@ -19,7 +19,6 @@ public class GetTaskQueryHandler
         GetTaskQuery request,
         CancellationToken cancellationToken)
     {
-        // 1. Projeyi çek (yetki için)
         var project = await _context.Projects
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == request.ProjectId, cancellationToken);
@@ -29,18 +28,15 @@ public class GetTaskQueryHandler
 
         var isOwner = project.OwnerId == request.RequesterId;
 
-        // 2. Bu projede requester'a atanmış task var mı?
         var hasAssignedTask = await _context.Tasks
             .AsNoTracking()
             .AnyAsync(t => t.ProjectId == request.ProjectId
                         && t.AssignedToId == request.RequesterId,
                       cancellationToken);
 
-        // 3. Ne owner ne de atanmış biriyse -> yetkisiz
         if (!isOwner && !hasAssignedTask)
             throw new ForbiddenException("Bu projenin görevlerini görme yetkiniz yok");
 
-        // 4. Task sorgusu — owner hepsini, assignee sadece kendininkini görür
         var query = _context.Tasks
             .AsNoTracking()
             .Where(t => t.ProjectId == request.ProjectId);

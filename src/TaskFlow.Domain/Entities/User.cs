@@ -10,7 +10,6 @@ public class User : BaseEntity
     public string FullName { get; private set; } = null!;
     public string Role { get; private set; } = "User";
 
-    // EF Core'un parametresiz constructor'a ihtiyacı var
     private User() { }
 
     public User(string email, string passwordHash, string fullName)
