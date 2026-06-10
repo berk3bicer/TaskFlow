@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskFlow.Application.Features.Comments.AddComment;
+using TaskFlow.Application.Features.Comments.DeleteComment;
 using TaskFlow.Application.Features.Comments.EditComment;
 using TaskFlow.Application.Features.Comments.GetComments;
 
@@ -61,6 +62,15 @@ public class CommentsController : ControllerBase
         };
 
         await _mediator.Send(commandToSend);
+        return NoContent();
+    }
+
+    [HttpDelete("{commentId}")]
+    public async Task<IActionResult> DeleteComment(Guid taskId, Guid commentId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var command = new DeleteCommentCommand(commentId, userId);
+        await _mediator.Send(command);
         return NoContent();
     }
 }
