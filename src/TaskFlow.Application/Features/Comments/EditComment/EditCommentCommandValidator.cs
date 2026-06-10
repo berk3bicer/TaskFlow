@@ -7,10 +7,10 @@ public class EditCommentCommandValidator : AbstractValidator<EditCommentCommand>
     public EditCommentCommandValidator()
     {
         RuleFor(ec => ec.CommentId)
-            .NotEmpty().WithMessage("Comment Id boş olamaz");
+            .NotEmpty().WithMessage("Yorum Id boş olamaz");
 
         RuleFor(ec => ec.Content)
-            .NotEmpty().WithMessage("Content boş olamaz")
+            .NotEmpty().WithMessage("Yorum boş olamaz")
             .MaximumLength(1000);
 
     }
